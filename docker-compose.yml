@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+
+  db:
+    restart: unless-stopped
+    image: mdillon/postgis:10
+    ports:
+      - "5432"
+    env_file: ./.env
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file: ./.env
+    volumes:
+      - static:/rzepa/static
+      - media:/rzepa/media
+      - ./rzepa:/rzepa/rzepa
+    depends_on:
+      - db
+    command: >
+      bash -c "/rzepa/scripts/wait-for-psql.sh db &&
+               pipenv run python manage.py makemigrations &&
+               pipenv run python manage.py migrate &&
+               pipenv run python manage.py collectstatic --noinput &&
+               pipenv run python manage.py runserver 0.0.0.0:8000"
+
+volumes:
+  static:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $PWD/static
+  media:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $PWD/media
+  dbdata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $PWD/dbdata
