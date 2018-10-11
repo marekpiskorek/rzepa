@@ -12,6 +12,7 @@ djangorestframework = "*"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
 pytest-django = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
