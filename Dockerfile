@@ -15,5 +15,7 @@ USER rzepa
 
 WORKDIR /rzepa/rzepa
 
+# There is a bug with latest pipenv and pip 18.1, therefore we need to ensure version of pip that works well with pipenv.
 RUN pipenv run pip install pip==18.0
+
 RUN pipenv install --pre --dev
