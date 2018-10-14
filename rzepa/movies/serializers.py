@@ -6,10 +6,10 @@ from movies.models import Movie, Rating
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ("Source", "Value", "Movie")
+        fields = ("Source", "Value", "movie")
 
     Source = serializers.CharField(source="source")
-    Value = serializers.CharField(source="Value")
+    Value = serializers.CharField(source="value")
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -56,7 +56,7 @@ class MovieSerializer(serializers.ModelSerializer):
     Country = serializers.CharField(source="country")
     Awards = serializers.CharField(source="awards")
     Poster = serializers.CharField(source="poster")
-    Ratings = RatingSerializer(many=True)
+    Ratings = RatingSerializer(many=True, read_only=True)
     Metascore = serializers.CharField(source="metascore")
     Type = serializers.CharField(source="type")
     DVD = serializers.CharField(source="dvd")

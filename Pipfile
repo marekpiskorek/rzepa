@@ -5,13 +5,14 @@ name = "pypi"
 
 [dev-packages]
 black = "*"
+pytest-django = "*"
+pytest-mock = "*"
 
 [packages]
 django = "*"
 djangorestframework = "*"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
-pytest-django = "*"
 requests = "*"
 
 [requires]
