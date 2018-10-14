@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "movies.apps.MoviesConfig",
+    "comments.apps.CommentsConfig",
 ]
 
 MIDDLEWARE = [
