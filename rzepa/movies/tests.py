@@ -1,5 +1,7 @@
 import pytest
 
+from movies.api_clients import OMDbAPIClient
+from movies.fixtures import movie_citizen_kane
 from movies.models import Movie
 
 
@@ -27,7 +29,21 @@ class TestMoviesEndpoint:
         response = client.post("/movies/", {})
         assert response.status_code == 400
 
-    def test_post_with_title_returns_created_movie_data(self, client):
+    def test_post_with_title_returns_created_movie_data(self, client, mocker):
+        mocker.patch.object(OMDbAPIClient, 'fetch', return_value=movie_citizen_kane())
         response = client.post("/movies/", {"title": "Citizen Kane"})
         assert response.status_code == 201
         assert response.data["Title"] == "Citizen Kane"
+
+    def test_ratings_are_created_with_movies(self, client, mocker):
+        mocker.patch.object(OMDbAPIClient, 'fetch', return_value=movie_citizen_kane())
+        response = client.post("/movies/", {"title": "Citizen Kane"})
+        assert response.status_code == 201
+        assert response.data["Title"] == "Citizen Kane"
+        ratings = sorted(response.data["Ratings"], key=lambda k: k["Source"])
+        assert ratings[0]['Source'] == 'Internet Movie Database'
+        assert ratings[0]['Value'] == '8.4/10'
+        assert ratings[1]['Source'] == 'Metacritic'
+        assert ratings[1]['Value'] == '100/100'
+        assert ratings[2]['Source'] == 'Rotten Tomatoes'
+        assert ratings[2]['Value'] == '100%'
