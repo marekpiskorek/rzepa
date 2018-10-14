@@ -8,46 +8,68 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Movie',
+            name="Movie",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(db_index=True, max_length=128, unique=True)),
-                ('actors', models.CharField(blank=True, default='', max_length=256)),
-                ('awards', models.CharField(blank=True, default='', max_length=256)),
-                ('box_office', models.CharField(blank=True, default='', max_length=32)),
-                ('country', models.CharField(blank=True, default='', max_length=32)),
-                ('dvd', models.CharField(blank=True, default='', max_length=32)),
-                ('director', models.CharField(blank=True, default='', max_length=32)),
-                ('genre', models.CharField(blank=True, default='', max_length=32)),
-                ('language', models.CharField(blank=True, default='', max_length=64)),
-                ('metascore', models.CharField(blank=True, default='', max_length=16)),
-                ('plot', models.TextField(blank=True, default='')),
-                ('poster', models.CharField(blank=True, default='', max_length=256)),
-                ('production', models.CharField(blank=True, default='', max_length=64)),
-                ('rated', models.CharField(blank=True, default='', max_length=16)),
-                ('released', models.CharField(blank=True, default='', max_length=32)),
-                ('runtime', models.CharField(blank=True, default='', max_length=16)),
-                ('type', models.CharField(blank=True, default='', max_length=16)),
-                ('website', models.CharField(blank=True, default='', max_length=128)),
-                ('writer', models.CharField(blank=True, default='', max_length=32)),
-                ('year', models.CharField(blank=True, default='', max_length=16)),
-                ('imdbID', models.CharField(blank=True, default='', max_length=16)),
-                ('imdbRating', models.CharField(blank=True, default='', max_length=16)),
-                ('imdbVotes', models.CharField(blank=True, default='', max_length=16)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(db_index=True, max_length=128, unique=True)),
+                ("actors", models.CharField(blank=True, default="", max_length=256)),
+                ("awards", models.CharField(blank=True, default="", max_length=256)),
+                ("box_office", models.CharField(blank=True, default="", max_length=32)),
+                ("country", models.CharField(blank=True, default="", max_length=32)),
+                ("dvd", models.CharField(blank=True, default="", max_length=32)),
+                ("director", models.CharField(blank=True, default="", max_length=32)),
+                ("genre", models.CharField(blank=True, default="", max_length=32)),
+                ("language", models.CharField(blank=True, default="", max_length=64)),
+                ("metascore", models.CharField(blank=True, default="", max_length=16)),
+                ("plot", models.TextField(blank=True, default="")),
+                ("poster", models.CharField(blank=True, default="", max_length=256)),
+                ("production", models.CharField(blank=True, default="", max_length=64)),
+                ("rated", models.CharField(blank=True, default="", max_length=16)),
+                ("released", models.CharField(blank=True, default="", max_length=32)),
+                ("runtime", models.CharField(blank=True, default="", max_length=16)),
+                ("type", models.CharField(blank=True, default="", max_length=16)),
+                ("website", models.CharField(blank=True, default="", max_length=128)),
+                ("writer", models.CharField(blank=True, default="", max_length=32)),
+                ("year", models.CharField(blank=True, default="", max_length=16)),
+                ("imdbID", models.CharField(blank=True, default="", max_length=16)),
+                ("imdbRating", models.CharField(blank=True, default="", max_length=16)),
+                ("imdbVotes", models.CharField(blank=True, default="", max_length=16)),
             ],
         ),
         migrations.CreateModel(
-            name='Rating',
+            name="Rating",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('source', models.CharField(max_length=64)),
-                ('value', models.CharField(max_length=16)),
-                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ratings', to='movies.Movie')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("source", models.CharField(max_length=64)),
+                ("value", models.CharField(max_length=16)),
+                (
+                    "movie",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="ratings",
+                        to="movies.Movie",
+                    ),
+                ),
             ],
         ),
     ]

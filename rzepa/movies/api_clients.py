@@ -5,7 +5,6 @@ import requests
 
 
 class OMDbAPIClient:
-
     def fetch(self, title):
         return requests.get(self._get_request_url(title)).json()
 
