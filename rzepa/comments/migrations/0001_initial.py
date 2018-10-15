@@ -8,19 +8,35 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('movies', '0002_auto_20181014_1641'),
-    ]
+    dependencies = [("movies", "0002_auto_20181014_1641")]
 
     operations = [
         migrations.CreateModel(
-            name='Comment',
+            name="Comment",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('author', models.CharField(blank=True, default='Anonymous', max_length=64)),
-                ('text', models.TextField()),
-                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='movies.Movie')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "author",
+                    models.CharField(blank=True, default="Anonymous", max_length=64),
+                ),
+                ("text", models.TextField()),
+                (
+                    "movie",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="comments",
+                        to="movies.Movie",
+                    ),
+                ),
             ],
-        ),
+        )
     ]

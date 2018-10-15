@@ -15,7 +15,11 @@ class TestCommentsEndpoint:
         movie = Movie.objects.create(title="Godfather")
         response = client.post(
             "/comments/",
-            {"movie_id": movie.id, "text": "Less impressed than expected", "author": "AVGN"}
+            {
+                "movie_id": movie.id,
+                "text": "Less impressed than expected",
+                "author": "AVGN",
+            },
         )
         assert response.status_code == 204
         assert response.data["movie_id"] == str(movie.id)
