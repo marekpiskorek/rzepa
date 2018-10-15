@@ -61,7 +61,7 @@ class TestTopMoviesEndpoint:
         movie = Movie.objects.create(title="Godfather")
         response = client.get("/top/")
         assert response.status_code == 200
-        assert response.data == [{'movie_id': movie.id, 'rank': 1, 'total_comments': 0}]
+        assert response.data == [{"movie_id": movie.id, "rank": 1, "total_comments": 0}]
 
     def test_movie_with_comments_get_comments_counted_correctly(self, client):
         movie = Movie.objects.create(title="Godfather")
@@ -70,7 +70,7 @@ class TestTopMoviesEndpoint:
         Comment.objects.create(movie=movie, text="I think Marlon Brando was hot")
         response = client.get("/top/")
         assert response.status_code == 200
-        assert response.data == [{'movie_id': movie.id, 'rank': 1, 'total_comments': 3}]
+        assert response.data == [{"movie_id": movie.id, "rank": 1, "total_comments": 3}]
 
     def test_more_than_one_movie_with_comments(self, client):
         movie_1 = Movie.objects.create(title="Godfather")
@@ -78,27 +78,31 @@ class TestTopMoviesEndpoint:
         Comment.objects.create(movie=movie_1, text="I fell asleep after half an hour")
         Comment.objects.create(movie=movie_1, text="I think Marlon Brando was hot")
         movie_2 = Movie.objects.create(title="The Room")
-        Comment.objects.create(movie=movie_2, text="Masterpiece beyond our understanding")
+        Comment.objects.create(
+            movie=movie_2, text="Masterpiece beyond our understanding"
+        )
         Comment.objects.create(movie=movie_2, text="New look at modern drama")
         movie_3 = Movie.objects.create(title="Fantastic Four")
         response = client.get("/top/")
         assert response.status_code == 200
         assert response.data == [
-            {'movie_id': movie_1.id, 'rank': 1, 'total_comments': 3},
-            {'movie_id': movie_2.id, 'rank': 2, 'total_comments': 2},
-            {'movie_id': movie_3.id, 'rank': 3, 'total_comments': 0},
+            {"movie_id": movie_1.id, "rank": 1, "total_comments": 3},
+            {"movie_id": movie_2.id, "rank": 2, "total_comments": 2},
+            {"movie_id": movie_3.id, "rank": 3, "total_comments": 0},
         ]
 
     def test_tie_in_comment_number_results_in_the_same_rank(self, client):
         movie_1 = Movie.objects.create(title="Godfather")
         Comment.objects.create(movie=movie_1, text="It was ok")
         movie_2 = Movie.objects.create(title="The Room")
-        Comment.objects.create(movie=movie_2, text="Masterpiece beyond our understanding")
+        Comment.objects.create(
+            movie=movie_2, text="Masterpiece beyond our understanding"
+        )
         movie_3 = Movie.objects.create(title="Fantastic Four")
         response = client.get("/top/")
         assert response.status_code == 200
         assert response.data == [
-            {'movie_id': movie_1.id, 'rank': 1, 'total_comments': 1},
-            {'movie_id': movie_2.id, 'rank': 1, 'total_comments': 1},
-            {'movie_id': movie_3.id, 'rank': 2, 'total_comments': 0},
+            {"movie_id": movie_1.id, "rank": 1, "total_comments": 1},
+            {"movie_id": movie_2.id, "rank": 1, "total_comments": 1},
+            {"movie_id": movie_3.id, "rank": 2, "total_comments": 0},
         ]

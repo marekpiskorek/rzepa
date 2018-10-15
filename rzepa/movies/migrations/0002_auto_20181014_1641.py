@@ -5,59 +5,55 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('movies', '0001_initial'),
-    ]
+    dependencies = [("movies", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='movie',
-            name='box_office',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="box_office",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='movie',
-            name='country',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="country",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='movie',
-            name='director',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="director",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='movie',
-            name='dvd',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="dvd",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='movie',
-            name='genre',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="genre",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='movie',
-            name='language',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="language",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='movie',
-            name='production',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="production",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='movie',
-            name='released',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="released",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='movie',
-            name='writer',
-            field=models.CharField(blank=True, default='', max_length=128),
+            model_name="movie",
+            name="writer",
+            field=models.CharField(blank=True, default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='rating',
-            name='source',
-            field=models.CharField(max_length=128),
+            model_name="rating", name="source", field=models.CharField(max_length=128)
         ),
     ]

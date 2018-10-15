@@ -33,11 +33,12 @@ class MovieViewSet(ModelViewSet):
 
 
 class TopMoviesView(APIView):
-
     def get(self, request, format=None):
         date_from = request.query_params.get("from")
         date_to = request.query_params.get("to")
-        qs = Movie.objects.prefetch_related("comments").annotate(total_comments=Count("comments"))
+        qs = Movie.objects.prefetch_related("comments").annotate(
+            total_comments=Count("comments")
+        )
         if date_from:
             qs = qs.filter(comments__created_at__gte=date_from)
         if date_to:
