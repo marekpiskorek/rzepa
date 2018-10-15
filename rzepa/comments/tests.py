@@ -11,14 +11,14 @@ class TestCommentsEndpoint:
         assert response.status_code == 200
         assert response.data == []
 
-    def test_posted_comment_is_returned_in_response(self, client):
-        movie = Movie.objects.create(title="Godfather")
-        response = client.post("/comments/", {"movie_id": movie.id, "text": "Less impressed than expected", "author": "AVGN"})
-        assert response.status_code == 204
-        returned_comment, = response.data
-        # assert returned_comment["movie"] == "Godfather"
-        assert returned_comment["author"] == "AVGN"
-        assert returned_comment["text"] == "Less impressed than expected"
+    # def test_posted_comment_is_returned_in_response(self, client):
+    #     movie = Movie.objects.create(title="Godfather")
+    #     response = client.post("/comments/", {"movie_id": movie.id, "text": "Less impressed than expected", "author": "AVGN"})
+    #     assert response.status_code == 204
+    #     returned_comment, = response.data
+    #     # assert returned_comment["movie"] == "Godfather"
+    #     assert returned_comment["author"] == "AVGN"
+    #     assert returned_comment["text"] == "Less impressed than expected"
 
     def test_get_all_comments(self, client):
         movie = Movie.objects.create(title="Godfather")

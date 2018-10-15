@@ -8,4 +8,4 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ("movie", "text", "author")
 
-    # movie = serializers.PrimaryKeyRelatedField()
+    movie = serializers.PrimaryKeyRelatedField(read_only=True)
