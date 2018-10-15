@@ -35,6 +35,7 @@ class TestMoviesEndpoint:
         response = client.post("/movies/", {"title": "Citizen Kane"})
         assert response.status_code == 201
         assert response.data["Title"] == "Citizen Kane"
+        assert response.data["Production"] == "RKO Radio Pictures"
 
     def test_ratings_are_created_with_movies(self, client, mocker):
         mocker.patch.object(OMDbAPIClient, "fetch", return_value=movie_citizen_kane())
