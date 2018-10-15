@@ -7,6 +7,10 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
 
+    def create(self, request):
+        breakpoint()
+        return super(CommentViewSet, self).create(request)
+
     def list(self, request):
         if "movie_pk" in request.query_params:
             self.queryset = Comment.objects.filter(
