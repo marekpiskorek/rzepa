@@ -26,6 +26,9 @@ class Movie(models.Model):
     imdbRating = models.CharField(max_length=16, blank=True, default="")
     imdbVotes = models.CharField(max_length=16, blank=True, default="")
 
+    def __str__(self):
+        return self.title
+
 
 class Rating(models.Model):
     source = models.CharField(max_length=128)
