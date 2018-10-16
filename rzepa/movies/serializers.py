@@ -40,6 +40,7 @@ class MovieSerializer(serializers.ModelSerializer):
             "BoxOffice",
             "Production",
             "Website",
+            "id",
         )
 
     Title = serializers.CharField(source="title")

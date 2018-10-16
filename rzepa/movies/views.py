@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.db.models import Count, Q
 from django.db.utils import DataError
 
@@ -18,24 +19,28 @@ class MovieViewSet(ModelViewSet):
         try:
             title = request.data["title"]
         except KeyError:
-            return Response(status=400)
+            return Response({"string": "Title is a required parameter"}, status=400)
         data = OMDbAPIClient().fetch(title)
         ratings = data.pop("Ratings", [])
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             try:
-                movie = serializer.save()
-            except DataError as e:
-                return Response({"string": str(e).strip()}, status=400)
-            for rating in ratings:
-                rating["movie_id"] = movie.id
-                rating_serializer = RatingSerializer(data=rating)
-                if rating_serializer.is_valid():
-                    try:
-                        rating_serializer.save()
-                    except DataError:
-                        # Here we can silently pass on errors as ratings aren't crucial for the movie.
-                        continue
+                movie = Movie.objects.get(title=data["Title"])
+            except Movie.DoesNotExist:
+                try:
+                    movie = serializer.save()
+                except DataError as e:
+                    return Response({"string": str(e).strip()}, status=400)
+            else:
+                for rating in ratings:
+                    rating["movie_id"] = movie.id
+                    rating_serializer = RatingSerializer(data=rating)
+                    if rating_serializer.is_valid():
+                        try:
+                            rating_serializer.save()
+                        except DataError:
+                            # Here we can silently pass on errors as ratings aren't crucial for the movie.
+                            continue
         else:
             return Response({"string": str(e).strip()}, status=400)
         data["Ratings"] = ratings

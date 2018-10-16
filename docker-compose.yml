@@ -4,7 +4,7 @@ services:
 
   db:
     restart: unless-stopped
-    image: mdillon/postgis:10
+    image: postgres
     ports:
       - "5432"
     env_file: ./.env

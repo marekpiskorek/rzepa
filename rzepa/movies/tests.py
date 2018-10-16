@@ -38,6 +38,15 @@ class TestMoviesEndpoint:
         assert response.data["Title"] == "Citizen Kane"
         assert response.data["Production"] == "RKO Radio Pictures"
 
+    def test_post_with_duplicate_movie_returns_original_movie(self, client, mocker):
+        mocker.patch.object(OMDbAPIClient, "fetch", return_value=movie_citizen_kane())
+        response = client.post("/movies/", {"title": "Citizen Kane"})
+        assert response.status_code == 201
+        assert response.data["Title"] == "Citizen Kane"
+        assert response.data["Production"] == "RKO Radio Pictures"
+        response = client.post("/movies/", {"title": "Citizen Kane"})
+        assert Movie.objects.count() == 1
+
     def test_ratings_are_created_with_movies(self, client, mocker):
         mocker.patch.object(OMDbAPIClient, "fetch", return_value=movie_citizen_kane())
         response = client.post("/movies/", {"title": "Citizen Kane"})
@@ -120,7 +129,7 @@ class TestTopCommentedMoviesEndpoint:
         movie_3 = Movie.objects.create(title="Fantastic Four")
         response = client.get("/top/")
         assert response.status_code == 200
-        assert response.data == [
+        assert sorted(response.data, key=lambda k: k["movie_id"]) == [
             {"movie_id": movie_1.id, "rank": 1, "total_comments": 3},
             {"movie_id": movie_2.id, "rank": 2, "total_comments": 2},
             {"movie_id": movie_3.id, "rank": 3, "total_comments": 0},
@@ -136,7 +145,7 @@ class TestTopCommentedMoviesEndpoint:
         movie_3 = Movie.objects.create(title="Fantastic Four")
         response = client.get("/top/")
         assert response.status_code == 200
-        assert response.data == [
+        assert sorted(response.data, key=lambda k: k["movie_id"]) == [
             {"movie_id": movie_1.id, "rank": 1, "total_comments": 1},
             {"movie_id": movie_2.id, "rank": 1, "total_comments": 1},
             {"movie_id": movie_3.id, "rank": 2, "total_comments": 0},
