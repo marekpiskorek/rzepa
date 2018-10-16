@@ -1,6 +1,4 @@
-from copy import deepcopy
-
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -44,14 +42,18 @@ class TopMoviesView(APIView):
     def get(self, request, format=None):
         date_from = request.query_params.get("from")
         date_to = request.query_params.get("to")
-        qs = Movie.objects.prefetch_related("comments").annotate(
-            total_comments=Count("comments")
-        )
+        qs = Movie.objects.prefetch_related("comments")
+        filters = []
         if date_from:
-            qs = qs.filter(comments__created_at__gte=date_from)
+            filters.append(Q(comments__created_at__gte=date_from))
         if date_to:
-            qs = qs.filter(comments__created_at__lte=date_to)
-        qs = qs.values("id", "total_comments").order_by("-total_comments")
+            filters.append(Q(comments__created_at__lte=date_to))
+        qs = (
+            qs.filter(*filters)
+            .annotate(total_comments=Count("comments"))
+            .values("id", "total_comments")
+            .order_by("-total_comments")
+        )
         response = []
         last_count = 0
         last_rank = 0
