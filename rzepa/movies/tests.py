@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import pytest
 
 from comments.models import Comment
@@ -147,11 +147,41 @@ class TestTopCommentedMoviesEndpoint:
         )
         Comment.objects.create(movie=movie_2, text="New look at modern drama")
         Movie.objects.create(title="Fantastic Four")
-        yesterday = datetime.now() - timedelta(days=1)
-        tomorrow = datetime.now() + timedelta(days=1)
+        yesterday = datetime.now(timezone.utc) - timedelta(days=1)
+        tomorrow = datetime.now(timezone.utc) + timedelta(days=1)
         response = client.get("/top/", {"from": yesterday, "to": tomorrow})
         assert response.status_code == 200
         assert response.data == [
             {"movie_id": movie_1.id, "rank": 1, "total_comments": 3},
             {"movie_id": movie_2.id, "rank": 2, "total_comments": 2},
+        ]
+
+    def test_top_movies_only_including_comments_with_significant_time_range(
+        self, client
+    ):
+        yesterday = datetime.now(timezone.utc) - timedelta(days=1)
+        tomorrow = datetime.now(timezone.utc) + timedelta(days=1)
+        two_days_ago = datetime.now(timezone.utc) - timedelta(days=2)
+        in_two_days = datetime.now(timezone.utc) + timedelta(days=2)
+        movie_1 = Movie.objects.create(title="Godfather")
+        Comment.objects.create(movie=movie_1, text="It was ok", created_at=two_days_ago)
+        Comment.objects.create(movie=movie_1, text="I fell asleep after half an hour")
+        Comment.objects.create(movie=movie_1, text="I think Marlon Brando was hot")
+        Comment.objects.create(
+            movie=movie_1,
+            text="What is this? A crossover episode?",
+            created_at=in_two_days,
+        )
+        movie_2 = Movie.objects.create(title="The Room")
+        Comment.objects.create(
+            movie=movie_2, text="Masterpiece beyond our understanding"
+        )
+        Comment.objects.create(movie=movie_2, text="New look at modern drama")
+        yesterday = datetime.now() - timedelta(days=1)
+        tomorrow = datetime.now() + timedelta(days=1)
+        response = client.get("/top/", {"from": yesterday, "to": tomorrow})
+        assert response.status_code == 200
+        assert response.data == [
+            {"movie_id": movie_1.id, "rank": 1, "total_comments": 2},
+            {"movie_id": movie_2.id, "rank": 1, "total_comments": 2},
         ]
