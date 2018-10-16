@@ -5,7 +5,6 @@ from comments.serializers import CommentSerializer, CommentPostSerializer
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-
     def get_serializer_class(self):
         return (
             CommentPostSerializer

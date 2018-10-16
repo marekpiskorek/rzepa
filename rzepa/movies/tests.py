@@ -55,7 +55,9 @@ class TestMoviesEndpoint:
         mocker.patch.object(OMDbAPIClient, "fetch", return_value=movie_too_long_data())
         response = client.post("/movies/", {"title": "Stranger Tides"})
         assert response.status_code == 400
-        assert response.data["string"] == "value too long for type character varying(128)"
+        assert (
+            response.data["string"] == "value too long for type character varying(128)"
+        )
 
     def test_finding_movies_by_name(self, client):
         movie_1 = Movie.objects.create(title="Godfather")

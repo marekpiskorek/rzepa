@@ -6,7 +6,7 @@ services:
     image: nginx
     ports:
       - "8080:80"
-    command: /bin/bash -c "exec nginx -g 'daemon off;'
+    command: /bin/bash -c "exec nginx -g 'daemon off;'"
   db:
     restart: unless-stopped
     image: mdillon/postgis:10
