@@ -3,7 +3,7 @@ import pytest
 
 from comments.models import Comment
 from movies.api_clients import OMDbAPIClient
-from movies.fixtures import movie_citizen_kane
+from movies.fixtures import movie_citizen_kane, movie_too_long_data
 from movies.models import Movie
 
 
@@ -50,6 +50,12 @@ class TestMoviesEndpoint:
         assert ratings[1]["Value"] == "100/100"
         assert ratings[2]["Source"] == "Rotten Tomatoes"
         assert ratings[2]["Value"] == "100%"
+
+    def test_broken_movie_data_returned(self, client, mocker):
+        mocker.patch.object(OMDbAPIClient, "fetch", return_value=movie_too_long_data())
+        response = client.post("/movies/", {"title": "Stranger Tides"})
+        assert response.status_code == 400
+        assert response.data["string"] == "value too long for type character varying(128)"
 
     def test_finding_movies_by_name(self, client):
         movie_1 = Movie.objects.create(title="Godfather")

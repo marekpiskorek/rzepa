@@ -1,4 +1,5 @@
 from django.db.models import Count, Q
+from django.db.utils import DataError
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -22,12 +23,21 @@ class MovieViewSet(ModelViewSet):
         ratings = data.pop("Ratings", [])
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            movie = serializer.save()
+            try:
+                movie = serializer.save()
+            except DataError as e:
+                return Response({"string": str(e).strip()}, status=400)
             for rating in ratings:
                 rating["movie_id"] = movie.id
                 rating_serializer = RatingSerializer(data=rating)
                 if rating_serializer.is_valid():
-                    rating_serializer.save()
+                    try:
+                        rating_serializer.save()
+                    except DataError:
+                        # Here we can silently pass on errors as ratings aren't crucial for the movie.
+                        continue
+        else:
+            return Response({"string": str(e).strip()}, status=400)
         data["Ratings"] = ratings
         return Response(data, status=201)
 
