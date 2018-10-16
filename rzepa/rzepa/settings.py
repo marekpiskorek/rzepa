@@ -15,7 +15,7 @@ SECRET_KEY = "*mgh#&!rmupyclfgt1=$&#+ugraqr1z*50p#glh_@%s=htxvbe"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "rzepa.mpiskore.p6.tiktalik.io"]
 
 
 # Application definition
