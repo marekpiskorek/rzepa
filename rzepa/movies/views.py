@@ -1,4 +1,5 @@
-from django.db.models import Count
+from django.db.models import Count, Q
+from django.db.utils import DataError
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -22,28 +23,47 @@ class MovieViewSet(ModelViewSet):
         ratings = data.pop("Ratings", [])
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            movie = serializer.save()
+            try:
+                movie = serializer.save()
+            except DataError as e:
+                return Response({"string": str(e).strip()}, status=400)
             for rating in ratings:
                 rating["movie_id"] = movie.id
                 rating_serializer = RatingSerializer(data=rating)
                 if rating_serializer.is_valid():
-                    rating_serializer.save()
+                    try:
+                        rating_serializer.save()
+                    except DataError:
+                        # Here we can silently pass on errors as ratings aren't crucial for the movie.
+                        continue
+        else:
+            return Response({"string": str(e).strip()}, status=400)
         data["Ratings"] = ratings
         return Response(data, status=201)
+
+    def list(self, request):
+        title = request.query_params.get("title")
+        if title is not None:
+            self.queryset = self.queryset.filter(title__icontains=title)
+        return super(MovieViewSet, self).list(request)
 
 
 class TopMoviesView(APIView):
     def get(self, request, format=None):
         date_from = request.query_params.get("from")
         date_to = request.query_params.get("to")
-        qs = Movie.objects.prefetch_related("comments").annotate(
-            total_comments=Count("comments")
-        )
+        qs = Movie.objects.prefetch_related("comments")
+        filters = []
         if date_from:
-            qs = qs.filter(comments__created_at__gte=date_from)
+            filters.append(Q(comments__created_at__gte=date_from))
         if date_to:
-            qs = qs.filter(comments__created_at__lte=date_to)
-        qs = qs.values("id", "total_comments").order_by("-total_comments")
+            filters.append(Q(comments__created_at__lte=date_to))
+        qs = (
+            qs.filter(*filters)
+            .annotate(total_comments=Count("comments"))
+            .values("id", "total_comments")
+            .order_by("-total_comments")
+        )
         response = []
         last_count = 0
         last_rank = 0

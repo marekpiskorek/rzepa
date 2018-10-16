@@ -15,6 +15,7 @@ djangorestframework = "*"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
 requests = "*"
+uwsgi = "*"
 
 [requires]
 python_version = "3.7"
