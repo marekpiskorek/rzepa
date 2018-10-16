@@ -16,13 +16,13 @@ class TestCommentsEndpoint:
         response = client.post(
             "/comments/",
             {
-                "movie_id": movie.id,
+                "movie": movie.id,
                 "text": "Less impressed than expected",
                 "author": "AVGN",
             },
         )
-        assert response.status_code == 204
-        assert response.data["movie_id"] == str(movie.id)
+        assert response.status_code == 201
+        assert response.data["movie"] == movie.id
         assert response.data["author"] == "AVGN"
         assert response.data["text"] == "Less impressed than expected"
 
@@ -32,7 +32,7 @@ class TestCommentsEndpoint:
         response = client.get("/comments/")
         assert response.status_code == 200
         returned_comment, = response.data
-        # assert returned_comment["movie"] == "Godfather"
+        assert returned_comment["movie"]["title"] == "Godfather"
         assert returned_comment["text"] == "Positive comment"
         assert returned_comment["author"] == "Anonymous"
 

@@ -50,9 +50,34 @@ class TestMoviesEndpoint:
         assert ratings[2]["Source"] == "Rotten Tomatoes"
         assert ratings[2]["Value"] == "100%"
 
+    def test_finding_movies_by_name(self, client):
+        movie_1 = Movie.objects.create(title="Godfather")
+        movie_2 = Movie.objects.create(title="Gone With The Wind")
+        Movie.objects.create(title="The Room")
+        response = client.get("/movies/", {"title": "Go"})
+        assert response.status_code == 200
+        response_movie_1, response_movie_2 = sorted(
+            response.data, key=lambda k: k["Title"]
+        )
+        assert response_movie_1["Title"] == movie_1.title
+        assert response_movie_2["Title"] == movie_2.title
+
+    def test_finding_movie_by_icontains(self, client):
+        movie_1 = Movie.objects.create(title="Godfather")
+        movie_2 = Movie.objects.create(title="Gone With The Wind")
+        movie_3 = Movie.objects.create(title="The Room")
+        response = client.get("/movies/", {"title": "the"})
+        assert response.status_code == 200
+        response_movie_1, response_movie_2, response_movie_3 = sorted(
+            response.data, key=lambda k: k["Title"]
+        )
+        assert response_movie_1["Title"] == movie_1.title
+        assert response_movie_2["Title"] == movie_2.title
+        assert response_movie_3["Title"] == movie_3.title
+
 
 @pytest.mark.django_db
-class TestTopMoviesEndpoint:
+class TestTopCommentedMoviesEndpoint:
     def test_endpoint_on_empty_db(self, client):
         response = client.get("/top/")
         assert response.status_code == 200

@@ -63,3 +63,9 @@ class MovieSerializer(serializers.ModelSerializer):
     BoxOffice = serializers.CharField(source="box_office")
     Production = serializers.CharField(source="production")
     Website = serializers.CharField(source="website")
+
+
+class ReferencedMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ("title",)

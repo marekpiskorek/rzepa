@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from django.db.models import Count
 
 from rest_framework.viewsets import ModelViewSet
@@ -30,6 +32,12 @@ class MovieViewSet(ModelViewSet):
                     rating_serializer.save()
         data["Ratings"] = ratings
         return Response(data, status=201)
+
+    def list(self, request):
+        title = request.query_params.get("title")
+        if title is not None:
+            self.queryset = self.queryset.filter(title__icontains=title)
+        return super(MovieViewSet, self).list(request)
 
 
 class TopMoviesView(APIView):
